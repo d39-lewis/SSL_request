@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}{% endblock %}
+{% block css_styles %}<link rel="stylesheet" href="{% static 'SSL/home.css' %}">{% endblock %}
+
+{% block content %}
+    {% include "includes/header.html" %}
+    <h1 class="page_title">User Page</h1>
+    <form method="POST">
+    {% csrf_token %}
+
+    <!-- Render the form fields automatically with labels -->
+    {{ form.as_p }} <!-- This renders all fields as <p> tags, with their labels and inputs -->
+
+    <!-- Optionally, render individual fields for more control -->
+    <div>
+        <label for="{{ form.domain.id_for_label }}">{{ form.domain.label }}</label>
+        {{ form.domain }}
+    </div>
+    <div>
+        <label for="{{ form.country.id_for_label }}">{{ form.country.label }}</label>
+        {{ form.country }}
+    </div>
+    <div>
+        <label for="{{ form.state.id_for_label }}">{{ form.state.label }}</label>
+        {{ form.state }}
+    </div>
+    <div>
+        <label for="{{ form.locality.id_for_label }}">{{ form.locality.label }}</label>
+        {{ form.locality }}
+    </div>
+    <div>
+        <label for="{{ form.organisation.id_for_label }}">{{ form.organisation.label }}</label>
+        {{ form.organisation }}
+    </div>
+    <div>
+        <label for="{{ form.san_list.id_for_label }}">{{ form.san_list.label }}</label>
+        <input type="text" id="{{ form.san_list.id_for_label }}" placeholder="Enter SAN(optional)">
+    <button id="add_san_btn">Add SAN</button>
+
+    <ul id="san_list_display"></ul>
+    <input type="hidden" id="san_list" value="[]">
+
+    <script>
+        {#Javascript for the additional domains    #}
+        document.addEventListener("DOMContentLoaded", function () {
+            const sanInput = document.getElementById("san_input");
+            const sanListDisplay = document.getElementById("san_list_display");
+            const sanListHidden = document.getElementById("san_list");
+
+            let sanList = [];
+
+            // Function to render the SAN list
+            function renderSanList() {
+                sanListDisplay.innerHTML = ""; // Clear the display list
+                sanList.forEach((san, index) => {
+                    const listItem = document.createElement("li");
+                    listItem.textContent = san;
+
+                    const deleteBtn = document.createElement("button");
+                    deleteBtn.textContent = "Delete";
+                    deleteBtn.addEventListener("click", function () {
+                        sanList.splice(index, 1); // Remove the domain
+                        updateSanList();
+                    });
+
+                    listItem.appendChild(deleteBtn);
+                    sanListDisplay.appendChild(listItem);
+                });
+
+                sanListHidden.value = JSON.stringify(sanList); // Update hidden input
+            }
+
+            // Function to add a SAN
+            function addSan() {
+                const san = sanInput.value.trim();
+                if (!san) return;
+
+                // Validate domain using regex
+                const domainRegex = /^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}?$/;
+                if (!domainRegex.test(san)) {
+                    alert("Invalid domain name.");
+                    return;
+                }
+
+                sanList.push(san);
+                sanInput.value = ""; // Clear input
+                updateSanList();
+            }
+
+            // Update the SAN list and re-render
+            function updateSanList() {
+                renderSanList();
+            }
+
+            // Event listener for adding SANs
+            document.getElementById("add_san_btn").addEventListener("click", addSan);
+
+            // Optional: Add ENTER key functionality
+            sanInput.addEventListener("keypress", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    addSan();
+                }
+            });
+        });
+    </script>
+        {{ form.san_list }}
+    </div>
+    <div>
+        <label for="{{ form.key_decision.id_for_label }}">{{ form.key_decision.label }}</label>
+        {{ form.key_decision }}
+    </div>
+    <!-- Render other fields similarly -->
+
+    <button type="submit">Submit</button>
+</form>
+
+
+{% endblock %}

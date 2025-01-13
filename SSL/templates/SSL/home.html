@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+
+
+{% block page_title %}Home Page{% endblock %}
+{% block css_styles %}<link rel="stylesheet" href="{% static 'SSL/home.css' %}">{% endblock %}
+
+{% block content %}
+    <h1 class="page_title">Welcome to SSL Request</h1>
+    <div class="container">
+        <div class="link-box">
+            <a href="{% url 'choice' choice='user' %}">Go to User Page</a>
+        </div>
+        <div class="link-box">
+            <a href="{% url 'choice' choice='admin' %}">Go to Admin Page</a>
+        </div>
+    </div>
+{% endblock %}

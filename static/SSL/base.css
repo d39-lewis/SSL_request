@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Jersey+15&display=swap');
+
+html {
+    font-family: 'Jersey 15', sans-serif; /* Add a generic fallback like sans-serif */
+}
+
+/* Title Styling */
+.page_title {
+    font-size: 2rem; /* Make the title prominent */
+    font-weight: bold;
+    color: #0a0a0a; /* Brand color */
+    text-align: center; /* Center the title */
+    margin: 2rem 0; /* Add spacing around the title */
+    text-transform: uppercase; /* Make the title all caps for emphasis */
+    letter-spacing: 1px; /* Slight letter spacing for a polished look */
+}
+
+

@@ -1,0 +1,41 @@
+/* Header Styling */
+header {
+    display: flex;
+    align-items: center; /* Center items vertically within the header */
+    justify-content: flex-start; /* Align content to the left */
+    padding: 1rem; /* Add padding inside the header */
+    background-color: #f0f0f0; /* Light gray background */
+    border: 1px solid #ccc; /* Border around the header box */
+    border-radius: 8px; /* Rounded corners for the box */
+    margin: 1rem 0; /* Add spacing above and below the header */
+    max-width: 70px; /* Limit the width */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for elevation */
+    transition: background-color 0.3s ease; /* Smooth hover transition */
+}
+
+/* Hover Effect for Header */
+header:hover {
+    background-color: #d6d6d6; /* Darker gray on hover */
+}
+
+/* Add Left Arrow */
+header a::before {
+    content: '←'; /* Unicode arrow */
+    margin-right: 0.5rem; /* Space between arrow and text */
+    font-size: 1.2rem; /* Adjust size of the arrow */
+    color: #0e0e0e; /* Match brand color */
+}
+
+/* Link Styling */
+header a {
+    text-decoration: none;
+    color: #050505; /* Link color */
+    font-weight: bold;
+    font-size: 1.2rem;
+    transition: color 0.3s ease; /* Smooth hover transition */
+}
+
+/* Hover Effect for Link */
+header a:hover {
+    color: #151515; /* Darker shade on hover */
+}

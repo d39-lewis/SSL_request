@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}{% endblock %}
+{% block css_styles %}<link rel="stylesheet" href="{% static 'SSL/home.css' %}">{% endblock %}
+
+{% block content %}
+    {% include "includes/header.html" %}
+    <h1 class="page_title">Admin Page</h1>
+{% endblock %}
