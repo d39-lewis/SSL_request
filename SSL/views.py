@@ -1,44 +1,42 @@
-from django.shortcuts import render
 from django.http import Http404
+from django.views import View
+from django.shortcuts import render
 from .forms import SSLrequestform
-from .SSL_request import SSLRequest  # Import SSLRequest class here
+from .models import SSLRequest
 
 
-def index(request, choice):
-    match choice:
-        case 'home':
-            return render(request, 'SSL/home.html')
-        case 'user':
-            if request.method == 'POST':
-                form = SSLrequestform(request.POST)
-                if form.is_valid():
-                    # Use form.cleaned_data to interact with your SSLRequest class
-                    sslrequest = SSLRequest(
-                        domain=form.cleaned_data["domain"],
-                        country=form.cleaned_data["country"],
-                        state=form.cleaned_data["state"],
-                        locality=form.cleaned_data["locality"],
-                        organization=form.cleaned_data["organisation"],
-                        san_list=form.cleaned_data.get("san_list"),
-                        key_path=None,  # Update as needed
-                        key_password=form.cleaned_data.get("key_yes_password"),
-                        key_size=form.cleaned_data.get("key_yes_size", 2048),
-                    )
-                    # Example: Redirect to a success page or render a success template
-                    return render(request, 'SSL/admin.html', {'sslrequest': sslrequest})
+class SSLView(View):
+    def home(self, request):
+        # Ensure the HTTP method check is case-insensitive and corrected to 'GET'.
+        if request.method == 'GET':
+            return render(self, request, 'SSL/home.html')
+        else:
+            raise Http404()  # Handle non-GET requests appropriately
 
-                    # If the form is not valid, return the form with errors
-                return render(request, 'SSL/user.html', {'form': form})
+    def ssl_request_view(self, request):
+        if request.method == "POST":
+            form = SSLrequestform(request.POST)
+            if form.is_valid():
+                # Save the data to the SSLRequest model
+                ssl_request = SSLRequest.objects.create(
+                    domain=form.cleaned_data["domain"],
+                    country=form.cleaned_data["country"],
+                    state=form.cleaned_data["state"],
+                    locality=form.cleaned_data["locality"],
+                    organisation=form.cleaned_data["organisation"],
+                    san_list=form.cleaned_data.get("san_list"),
+                    key_decision=form.cleaned_data["key_decision"],
+                    key_yes_size=form.cleaned_data.get("key_yes_size"),
+                    key_yes_password=form.cleaned_data.get("key_yes_password"),
+                    key_yes_name=form.cleaned_data.get("key_yes_name") if form.cleaned_data["key_decision"] == "yes" else None,
+                    key_no_name=form.cleaned_data.get("key_no_name") if form.cleaned_data["key_decision"] == "no" else None,
+                )
+                # Redirect to a success page or render a completion template
+                return render(self, request, "SSL/complete.html", {"ssl_request": ssl_request})
+        else:
+            # Initialize a blank form for GET requests
+            form = SSLrequestform()
 
-                # If GET request, initialize an empty form
-            else:
-                    form = SSLrequestform()
-                    return render(request, 'SSL/user.html', {'form': form})
-
-        case 'admin':
-            return render(request, 'SSL/admin.html')
-        case _:
-            raise Http404()
-
-
+        # Render the SSL request form template with the form instance
+        return render(request, "SSL/user.html", {"form": form})
 
