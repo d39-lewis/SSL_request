@@ -3,7 +3,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('home/', views.SSLView, {'choice': 'home'}, name='home'),
-    path('user/', views.SSLView, {'choice': 'user'}, name='user'),
-    path('complete/', views.SSLView, {'choice': 'complete'}, name='complete'),
+    path('user/', views.SSLView.as_view(),  name='user'),
+    path('complete/', views.SSLView.as_view(),  name='complete'),
     ]

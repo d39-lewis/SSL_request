@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ChoiceField
 from django.core.validators import RegexValidator
-from SSL.SSL_request import SSLRequest
+
 
 
 class SSLrequestform(forms.Form):
@@ -76,17 +76,10 @@ class SSLrequestform(forms.Form):
         widget=forms.TextInput(attrs={"placeholder": " <PASSWORD>"})
     )
 
-    key_yes_name = forms.CharField(
-        label="Key name",
-        required=True,
-        widget=forms.TextInput(attrs={"placeholder": ".key (not required)"})
 
-    )
-    key_no_name = forms.CharField(
-        label="personal key name",
-        required=True,
-        widget=forms.TextInput(attrs={"placeholder": ".key (not required)"})
-    )
+
+
+
 
     def clean_san_list(self):
         san_list = self.cleaned_data.get("san_list", [])
@@ -101,7 +94,3 @@ class SSLrequestform(forms.Form):
                 raise forms.ValidationError(f"Invalid domain in SAN list: {domain}")
 
         return san_list
-
-    class Meta:
-        model = SSLRequest
-        fields = "__all__"
